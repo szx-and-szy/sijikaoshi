@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>中国教育考试网 - 成绩查询</title>
+    <style>
+      :root {
+        --blue: #0f4b95;
+        --orange: #f58b00;
+        --text: #333;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+        background: #f3f3f3;
+        color: var(--text);
+      }
+
+      .wrap {
+        width: 1120px;
+        margin: 0 auto;
+      }
+
+      .topbar {
+        padding: 16px 0 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .badge {
+        width: 62px;
+        height: 62px;
+        border: 3px solid #2070c7;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: #2070c7;
+        font-weight: 700;
+        font-size: 15px;
+      }
+
+      .title-cn {
+        color: #13509a;
+        font-size: 58px;
+        line-height: 1;
+        font-weight: 700;
+      }
+
+      .title-en {
+        color: #13509a;
+        margin-top: 2px;
+        font-size: 12px;
+      }
+
+      .head-right {
+        text-align: right;
+      }
+
+      .head-links {
+        color: #666;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      .search {
+        display: inline-flex;
+      }
+
+      .search input {
+        width: 256px;
+        height: 38px;
+        border: 1px solid #cbcbcb;
+        border-right: 0;
+        font-size: 16px;
+        padding: 0 10px;
+      }
+
+      .search button {
+        width: 42px;
+        border: none;
+        color: #fff;
+        background: var(--orange);
+        cursor: not-allowed;
+      }
+
+      .nav {
+        background: #e9edf2;
+        border-bottom: 3px solid #1f4f90;
+      }
+
+      .nav ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        grid-template-columns: 62px repeat(7, 1fr);
+      }
+
+      .nav li {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--blue);
+        padding: 15px 0;
+      }
+
+      .nav li.active-home {
+        color: #fff;
+        background: var(--orange);
+      }
+
+      .nav li.active-score {
+        color: var(--orange);
+      }
+
+      .crumb {
+        border-bottom: 1px solid #ddd;
+        color: #666;
+        font-size: 16px;
+        padding: 12px 4px 14px;
+      }
+
+      .panel {
+        background: #fff;
+        display: flex;
+        min-height: 580px;
+      }
+
+      #queryPage {
+        display: flex;
+      }
+
+      .left {
+        width: 71%;
+        padding: 34px 40px 28px;
+      }
+
+      .right {
+        width: 29%;
+        border-left: 1px solid #e0e0e0;
+        padding: 20px 20px;
+      }
+
+      h1 {
+        margin: 0 0 26px;
+        text-align: center;
+        font-size: 40px;
+        color: #3f7eca;
+        font-weight: 500;
+      }
+
+      .form-row {
+        display: flex;
+        align-items: center;
+        margin: 16px 0;
+      }
+
+      .label {
+        width: 160px;
+        text-align: right;
+        margin-right: 14px;
+        font-size: 20px;
+      }
+
+      select,
+      input[type="text"] {
+        width: 235px;
+        height: 38px;
+        border: 1px solid #c8c8c8;
+        border-radius: 4px;
+        padding: 0 10px;
+        font-size: 16px;
+      }
+
+      .actions {
+        padding-left: 174px;
+        margin: 26px 0;
+      }
+
+      .btn {
+        width: 86px;
+        height: 30px;
+        border-radius: 4px;
+        border: none;
+        background: #2da0e9;
+        color: #fff;
+        margin-right: 10px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .tips,
+      .history {
+        margin-top: 18px;
+        border: 1px solid #ececec;
+        background: #fafafa;
+        padding: 12px;
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      .history .btn {
+        display: block;
+        margin: 10px auto 0;
+      }
+
+      .side-group {
+        margin-bottom: 18px;
+      }
+
+      .side-title {
+        margin: 0 0 10px;
+        font-size: 34px;
+        font-weight: 500;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 8px;
+      }
+
+      .side-list {
+        font-size: 16px;
+        line-height: 1.9;
+      }
+
+      #resultPage {
+        display: flex;
+        padding-top: 10px;
+      }
+
+      #resultPage.hidden {
+        display: none !important;
+      }
+
+      .result-title {
+        text-align: center;
+        color: #3f7fca;
+        font-size: 30px;
+        margin: 12px 0 16px;
+      }
+
+      .result-card {
+        width: 420px;
+        margin: 0 auto;
+        font-size: 18px;
+        line-height: 1.8;
+      }
+
+      .score-header {
+        margin: 8px 0;
+        background: #dce9f7;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .num-red {
+        color: #da2d2d;
+        font-weight: 700;
+      }
+
+      .num-blue {
+        color: #1a4f91;
+        font-weight: 700;
+      }
+
+      .notice {
+        margin-top: 12px;
+        background: #f7f7f7;
+        border-left: 3px solid #b3d0ea;
+        padding: 10px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      #resultPage .left {
+        padding-top: 18px;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header class="topbar">
+        <div class="logo">
+          <div class="badge">NEEA</div>
+          <div>
+            <div class="title-cn">中国教育考试网</div>
+            <div class="title-en">NATIONAL EDUCATION EXAMINATIONS AUTHORITY</div>
+          </div>
+        </div>
+        <div class="head-right">
+          <div class="head-links">关于我们 | ENGLISH</div>
+          <div class="search">
+            <input type="text" placeholder="请输入关键字" />
+            <button type="button">🔍</button>
+          </div>
+        </div>
+      </header>
+
+      <nav class="nav">
+        <ul>
+          <li class="active-home">⌂</li>
+          <li>考试资讯</li>
+          <li>公示公告</li>
+          <li>考试项目</li>
+          <li>考试报名</li>
+          <li class="active-score">成绩查询</li>
+          <li>证书查询</li>
+          <li>考试研究</li>
+        </ul>
+      </nav>
+
+      <div class="crumb">🏠 首页 > 成绩查询</div>
+
+      <div class="panel" id="queryPage">
+        <section class="left">
+          <h1>2025年下半年全国大学英语四、六级考试（含口试）成绩查询</h1>
+          <div class="form-row">
+            <div class="label">考试科目：</div>
+            <select>
+              <option>全国大学英语四级考试(CET4)</option>
+              <option>全国大学英语六级考试(CET6)</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="label">姓名：</div>
+            <input id="nameInput" type="text" placeholder="姓名超过3个字，可只输入前3个" />
+          </div>
+          <div class="form-row">
+            <div class="label">证件号码/准考证号：</div>
+            <input id="idInput" type="text" placeholder="请填写证件号或准考证号" />
+          </div>
+          <div class="actions">
+            <button class="btn" id="queryBtn" type="button">查询</button>
+            <button class="btn" id="resetBtn" type="button">重填</button>
+          </div>
+          <div class="tips">温馨提示：<br />1. 若考生的口试成绩为不合格，则成绩报告单上不报道其口试成绩。</div>
+          <div class="history">
+            查询2005年6月-2025年6月考试成绩，下载2021年6月-2025年6月考试电子成绩报告单（证书）。
+            <button class="btn" type="button">历史成绩查询</button>
+          </div>
+        </section>
+        <aside class="right">
+          <div class="side-group">
+            <h2 class="side-title">▪ 常见问题</h2>
+            <div class="side-list">Q1: 忘记准考证号怎么办？<br />Q2: 为什么笔试成绩为0？<br />Q3: 如对成绩有异议怎么办？<br />Q4: 如何获取本次考试电子成绩报告单？<br />Q5: 如何变更成绩报告单申请补发？</div>
+          </div>
+          <div class="side-group">
+            <h2 class="side-title">▪ 操作说明</h2>
+            <div class="side-list">1. 选择考试项目。<br />2. 输入姓名和证件号码/准考证号，点击查询按钮进行查询。<br />3. 如果输入信息正确，对应考试的成绩信息将在下一个页面列出。</div>
+          </div>
+          <div class="side-group">
+            <h2 class="side-title">▪ 联系我们</h2>
+            <div class="side-list">📧 query@mail.neea.edu.cn<br />📱 010-83020302<br />🕘 工作日 上午：08:30-12:00<br />　　下午：13:00-16:30</div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="panel hidden" id="resultPage">
+        <section class="left" style="width:100%">
+          <h1 class="result-title">全国大学英语四级考试(CET4)成绩详情</h1>
+          <div class="result-card">
+            <div>姓　　名：<span id="rName">--</span></div>
+            <div>证件号码：<span id="rId">--</span></div>
+            <div>学　　校：安徽财经大学</div>
+            <div class="score-header">笔试成绩</div>
+            <div>准考证号：340091252110008</div>
+            <div>总　　分：<span class="num-red">432</span></div>
+            <div>　　　听　力：<span class="num-blue">132</span></div>
+            <div>　　　阅　读：<span class="num-blue">160</span></div>
+            <div>　　　写作和翻译：<span class="num-blue">140</span></div>
+            <div class="score-header">口试成绩</div>
+            <div>准考证号：--</div>
+            <div>成　　绩：--</div>
+            <hr style="border: none; border-top: 1px solid #ddd; margin: 10px 0" />
+            <div>成绩报告单编号：252134009005260</div>
+            <div class="notice">您在报名期间已选择不需要纸质成绩报告单，2月27日6时至3月1日17时可再次登录报名网站（cet-bm.neea.edu.cn）进行修改。</div>
+            <p class="center"><button class="btn" id="backBtn" type="button">返回</button></p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const queryPage = document.getElementById('queryPage');
+      const resultPage = document.getElementById('resultPage');
+      const nameInput = document.getElementById('nameInput');
+      const idInput = document.getElementById('idInput');
+      const rName = document.getElementById('rName');
+      const rId = document.getElementById('rId');
+
+      function maskId(value) {
+        if (value.length <= 6) return value;
+        return value.slice(0, 2) + '***********' + value.slice(-3);
+      }
+
+      document.getElementById('queryBtn').addEventListener('click', () => {
+        const name = nameInput.value.trim();
+        const id = idInput.value.trim();
+
+        if (!name || !id) {
+          alert('请填写姓名和证件号码/准考证号');
+          return;
+        }
+
+        rName.textContent = name;
+        rId.textContent = maskId(id);
+
+        queryPage.classList.add('hidden');
+        resultPage.classList.remove('hidden');
+      });
+
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        nameInput.value = '';
+        idInput.value = '';
+      });
+
+      document.getElementById('backBtn').addEventListener('click', () => {
+        resultPage.classList.add('hidden');
+        queryPage.classList.remove('hidden');
+      });
+    </script>
+  </body>
+</html>
